@@ -25,8 +25,8 @@ public abstract class AbstractTspFormulationEdgeBased<V,E> {
 	protected IloCplex cplex;
 	protected DegreeConstraints<V,E> degreeConstraints;
 	protected MinEdgeWeightObjective<V,E> objective;
-	private List<E> optimalTour;
-	private double optimalCost;
+	protected List<E> optimalTour;
+	protected double optimalCost;
 	
 
 	
@@ -72,7 +72,15 @@ public abstract class AbstractTspFormulationEdgeBased<V,E> {
 		return optimalCost;
 	}
 
-	protected List<E> extractTour() throws UnknownObjectException, IloException{
+	protected List<E> extractTour() throws IloException{
+		List<List<E>> tours = extractTours();
+		if(tours.size() != 1){
+			throw new RuntimeException();
+		}
+		return tours.get(0);
+	}
+	
+	protected List<List<E>> extractTours() throws IloException{
 		Set<E> edgesUsed = new HashSet<E>();
 		for(E edge: edgeVariables.getEdgeVars().keySet() ){
 			if(CplexUtil.doubleToBoolean(cplex.getValue(edgeVariables.getEdgeVars().get(edge)))){
@@ -80,10 +88,7 @@ public abstract class AbstractTspFormulationEdgeBased<V,E> {
 			}
 		}
 		List<List<E>> tours = LoopExtractor.subTours(graph, edgesUsed);
-		if(tours.size() != 1){
-			throw new RuntimeException();
-		}
-		return tours.get(0);
+		return tours;
 	}
 
 }

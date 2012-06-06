@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableBiMap.Builder;
 
 public class CplexUtil {
 	
-	private static double epsilon = .000001;
+	public static double epsilon = .000001;
 	
 	public static boolean doubleToBoolean(double value){
 		if(Math.abs(1-value) < epsilon ){

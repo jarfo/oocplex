@@ -16,7 +16,7 @@ public class Main {
 	public static void main(String[] args){
 		//brd14051 is too big
 		String[] problemNames = new String[]{"bier127","eil51","brd14051","ch130","ch150","d198", "d493"};
-		String problemName = problemNames[1];
+		String problemName = problemNames[0];
 		try {
 			TspLibInstance<GeoNode> instance = TspLibParser.parse(problemName);
 			AbstractTspFormulationEdgeBased<GeoNode,WeightedEdge> tsp =

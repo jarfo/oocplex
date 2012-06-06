@@ -15,7 +15,7 @@ public class TspSubTourEliminationLazy<V, E> extends
 	public TspSubTourEliminationLazy(UndirectedGraph<V, E> graph,
 			Transformer<E, Double> edgeWeights) throws IloException{
 		this(graph,edgeWeights,new IloCplex());
-		cplex.setParam(IloCplex.IntParam.Threads, 8);
+		cplex.setParam(IloCplex.IntParam.Threads, 4);
 		
 	}
 
