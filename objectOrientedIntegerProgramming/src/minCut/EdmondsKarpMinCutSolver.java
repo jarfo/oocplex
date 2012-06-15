@@ -39,9 +39,9 @@ public class EdmondsKarpMinCutSolver<V, E> implements MinCutSolver<V, E> {
 	}
 
 	@Override
-	public List<Set<E>> findCutsLessThan(UndirectedGraph<V, E> graph,
+	public List<Cut<E>> findCutsLessThan(UndirectedGraph<V, E> graph,
 			Transformer<E, Number> edgeWeights, double value) {
-		List<Set<E>> ans = new ArrayList<Set<E>>();
+		List<Cut<E>> ans = new ArrayList<Cut<E>>();
 		
 		print("Forming min cut");
 		
@@ -72,13 +72,15 @@ public class EdmondsKarpMinCutSolver<V, E> implements MinCutSolver<V, E> {
 					if(addCut){						
 						Set<WeightedEdge> diGraphCutEdges = maxFlow.getMinCutEdges();
 						Set<E> graphCutEdges = new HashSet<E>();
+						double weight = 0;
 						for(WeightedEdge diGraphEdge: diGraphCutEdges){
 							V home = diGraph.getSource(diGraphEdge);
 							V target = diGraph.getDest(diGraphEdge);
-							graphCutEdges.add(graph.findEdge(home, target));
+							E edge = graph.findEdge(home, target);
+							graphCutEdges.add(edge);
+							weight+= edgeWeights.transform(edge).doubleValue();
 						}
-						ans.add(graphCutEdges);
-						
+						ans.add(new Cut<E>(graphCutEdges,weight));						
 					}
 				}
 			}

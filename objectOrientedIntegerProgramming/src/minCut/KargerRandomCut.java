@@ -11,8 +11,9 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.math3.random.RandomData;
 
-import tspIps.RandomInterface;
+
 
 import edu.uci.ics.jung.graph.UndirectedGraph;
 import edu.uci.ics.jung.graph.UndirectedSparseMultigraph;
@@ -26,9 +27,9 @@ public class KargerRandomCut<V,E> {
 	private Map<WeightedEdge,E> edgeMap;
 	private UndirectedSparseMultigraph<ContractionNode<V>,WeightedEdge> multigraph;
 	private Map<V,ContractionNode<V>> nodeMapping;
-	private RandomInterface rand;
+	private RandomData rand;
 	
-	public KargerRandomCut(UndirectedGraph<V,E> graph, RandomInterface rand){
+	public KargerRandomCut(UndirectedGraph<V,E> graph, RandomData rand){
 		this.graph = graph;
 		
 		this.rand = rand;
@@ -110,10 +111,10 @@ public class KargerRandomCut<V,E> {
 		private Map<WeightedEdge,Integer> edgeIndex;
 		private WeightedEdge[] edges;
 		private boolean[] present;
-		private RandomInterface rand;
+		private RandomData rand;
 		private int emptyCount;
 		
-		public EdgeSet(Collection<WeightedEdge> edges, RandomInterface rand){
+		public EdgeSet(Collection<WeightedEdge> edges, RandomData rand){
 			this.edges = new WeightedEdge[edges.size()];
 			this.present = new boolean[edges.size()];
 			Arrays.fill(present,true);
@@ -131,7 +132,7 @@ public class KargerRandomCut<V,E> {
 		public WeightedEdge getAndRemoveRandom(){			
 			WeightedEdge ans = null;
 			while(ans == null){
-				int randIndex = this.rand.nextInt(this.edges.length);
+				int randIndex = this.rand.nextInt(0,this.edges.length-1);
 				ans = getAndRemove(randIndex);
 			}
 			return ans;

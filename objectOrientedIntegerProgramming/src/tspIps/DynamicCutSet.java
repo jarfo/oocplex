@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import minCut.Cut;
+import minCut.MinCutSolver;
 import minCut.WeightedEdge.WeightedEdgeFactory;
 import minCut.WeightedEdge.WeightedEdgeTransformer;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.collections15.TransformerUtils;
 import org.apache.commons.collections15.functors.MapTransformer;
 
 
@@ -29,15 +32,16 @@ public class DynamicCutSet<V,E> {
 	private UndirectedGraph<V,E> graph;
 	private IloCplex cplex;
 	private EdgeVariables<V,E> edgeVariables;
+	private MinCutSolver<V,E> minCutSolver;
 	
 	
 	
-	
-	public DynamicCutSet(UndirectedGraph<V, E> graph, IloCplex cplex, EdgeVariables<V,E> edgeVariables) throws IloException {
+	public DynamicCutSet(UndirectedGraph<V, E> graph, IloCplex cplex, EdgeVariables<V,E> edgeVariables,MinCutSolver<V,E> minCutSolver) throws IloException {
 		super();
 		this.graph = graph;
 		this.cplex = cplex;
-		this.edgeVariables = edgeVariables;		
+		this.edgeVariables = edgeVariables;
+		this.minCutSolver = minCutSolver;
 	}
 	
 	
@@ -48,28 +52,30 @@ public class DynamicCutSet<V,E> {
 	
 	/**
 	 * 
-	 * @return true if found a violated cut
+	 * @return the lowest weight of any cut found
 	 */
-	public boolean addViolatedCut() throws IloException {
-		Map<E,Double> edgeWeights = new HashMap<E,Double>();
+	public double addViolatedCut() throws IloException {
+		final Map<E,Double> edgeWeights = new HashMap<E,Double>();
 		for(E edge: edgeVariables.getEdgeVars().keySet()){
 			edgeWeights.put(edge, cplex.getValue(edgeVariables.getEdgeVars().get(edge)));
 		}
-		List<Set<E>> cuts = null;
-		for(Set<E> graphCutEdges: cuts){
-		IloLinearIntExpr cut = cplex.linearIntExpr();
-		for(E edge: graphCutEdges){
-			cut.addTerm(edgeVariables.getEdgeVars().get(edge), 1);
+		Iterable<Cut<E>> cuts = this.minCutSolver.findCutsLessThan(graph, new Transformer<E,Number>(){
+			@Override
+			public Number transform(E arg0) {
+				return edgeWeights.get(arg0);
+			}}, 2);
+		boolean foundCut = false;
+		double minWeight = Double.MAX_VALUE;
+		for(Cut<E> graphCutEdges: cuts){
+			foundCut = true;
+			IloLinearIntExpr cut = cplex.linearIntExpr();
+			for(E edge: graphCutEdges.getEdges()){
+				cut.addTerm(edgeVariables.getEdgeVars().get(edge), 1);
+			}
+			cplex.addGe(cut, 2);
+			minWeight = Math.min(minWeight, graphCutEdges.getWeight());
 		}
-		cplex.addGe(cut, 2);
-		}
-		if(cuts.size() > 0){
-			return true;
-		}
-		else{
-			return false;
-		}
-			
+		return minWeight;			
 	}
 	
 	

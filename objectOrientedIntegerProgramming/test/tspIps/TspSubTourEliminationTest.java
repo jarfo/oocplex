@@ -9,6 +9,9 @@ import java.util.Set;
 import ilog.concert.IloException;
 import ilog.cplex.IloCplex;
 
+import minCut.EdmondsKarpMinCutSolver;
+import minCut.MinCutSolver;
+
 import org.apache.commons.collections15.Transformer;
 import org.junit.Test;
 
@@ -119,7 +122,7 @@ public class TspSubTourEliminationTest {
 		UndirectedGraph<Node,Node.Edge> graph = Node.makeGraph();
 		Transformer<Node.Edge,Double> edgeWeights = Node.makeEdgeWeights();
 		try {
-			TspSubTourEliminationLazy<Node,Node.Edge> tsp = new TspSubTourEliminationLazy<Node,Node.Edge>(graph,edgeWeights);
+			TspSubTourEliminationLazy<Node,Node.Edge> tsp = new TspSubTourEliminationLazy<Node,Node.Edge>(graph,edgeWeights,false);
 			tsp.solve();
 			assertEquals(24,tsp.getOptimalCost(),tolerance);
 			List<Node.Edge> optimalTour = tsp.getOptimalTour();
@@ -139,8 +142,9 @@ public class TspSubTourEliminationTest {
 	public void testDynamicCutSet() {
 		UndirectedGraph<Node,Node.Edge> graph = Node.makeGraph();
 		Transformer<Node.Edge,Double> edgeWeights = Node.makeEdgeWeights();
+		MinCutSolver<Node,Node.Edge> solver = new EdmondsKarpMinCutSolver<Node,Node.Edge>(false,false);
 		try {
-			TspDynamicCutSet<Node,Node.Edge> tsp = new TspDynamicCutSet<Node,Node.Edge>(graph,edgeWeights);
+			TspDynamicCutSet<Node,Node.Edge> tsp = new TspDynamicCutSet<Node,Node.Edge>(graph,edgeWeights,solver,1.9);
 			tsp.solve();
 			assertEquals(24,tsp.getOptimalCost(),tolerance);
 			List<Node.Edge> optimalTour = tsp.getOptimalTour();

@@ -15,6 +15,16 @@ public class CplexUtil {
 	
 	public static double epsilon = .000001;
 	
+	public static boolean isBinaryIntegral(double value){
+		if(Math.abs(1-value) < epsilon ){
+			return true;
+		}
+		else if(Math.abs(value) < epsilon){
+			return true;
+		}
+		return false;
+	}
+	
 	public static boolean doubleToBoolean(double value){
 		if(Math.abs(1-value) < epsilon ){
 			return true;

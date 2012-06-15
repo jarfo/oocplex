@@ -22,10 +22,15 @@
 	<classpathentry kind="lib" path="lib/jung/wstx-asl-3.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/guava-12.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/cplex.jar"/>
 	<classpathentry kind="lib" path="lib/commons-math3-3.0.jar" sourcepath="lib/commons-math3-3.0-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/objectOrientedIntegerProgramming/lib/commons-math3-3.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/cplex124.jar"/>
+	<classpathentry kind="lib" path="lib/jgrapht/jgrapht-jdk1.6.jar" sourcepath="lib/jgrapht/jgrapht-src.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/objectOrientedIntegerProgramming/lib/jgrapht/jgrapht-javadoc.zip!/javadoc"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

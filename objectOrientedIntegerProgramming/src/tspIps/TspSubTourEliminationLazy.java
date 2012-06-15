@@ -13,17 +13,18 @@ public class TspSubTourEliminationLazy<V, E> extends
 	private LazySubtourElimination<V,E> lazySubtourElimination;
 	
 	public TspSubTourEliminationLazy(UndirectedGraph<V, E> graph,
-			Transformer<E, Double> edgeWeights) throws IloException{
-		this(graph,edgeWeights,new IloCplex());
-		cplex.setParam(IloCplex.IntParam.Threads, 4);
+			Transformer<E, Double> edgeWeights, boolean printOutput) throws IloException{
+		this(graph,edgeWeights,printOutput,new IloCplex());
+		
 		
 	}
 
 	public TspSubTourEliminationLazy(UndirectedGraph<V, E> graph,
-			Transformer<E, Double> edgeWeights, IloCplex cplex)
+			Transformer<E, Double> edgeWeights, boolean printOutput, IloCplex cplex)
 			throws IloException {
 		super(graph, edgeWeights, cplex);
-		this.lazySubtourElimination = new LazySubtourElimination<V,E>(graph,cplex,edgeVariables);
+		cplex.setParam(IloCplex.IntParam.Threads, 4);
+		this.lazySubtourElimination = new LazySubtourElimination<V,E>(graph,cplex,edgeVariables, printOutput);
 	}
 
 }

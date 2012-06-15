@@ -16,6 +16,6 @@ public interface MinCutSolver<V,E> {
 	 * @param value
 	 * @return at least one cut less than value if such a cut exists, otherwise an empty list.
 	 */
-	public List<Set<E>> findCutsLessThan(UndirectedGraph<V,E> graph, Transformer<E,Number> edgeWeights, double value);
+	public Iterable<Cut<E>> findCutsLessThan(UndirectedGraph<V,E> graph, Transformer<E,Number> edgeWeights, double value);
 
 }
